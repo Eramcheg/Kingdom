@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.TimerTask;
 import java.util.Timer;
 
-public class Kingdom implements ActionListener {
+public class Kingdom_Monster_Level implements ActionListener {
    public static JLabel[][] jlab = {{new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X")},{new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X")},{new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X")},{new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X")},{new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X"),new JLabel("X")}};
 
 
@@ -27,19 +27,19 @@ public class Kingdom implements ActionListener {
 
 
     static boolean isPause=false;
+    static boolean isNewLevel=false;
     static JButton TryAgain =new JButton("Try Again");
     static JButton Left=new JButton("<--");
     static JButton Up=new JButton("|/");
     static JButton Down=new JButton("/|");
     static JButton Right=new JButton("-->");
+    static  JFrame jfrm;
 
 
 
-
-
-    Kingdom()
+    Kingdom_Monster_Level()
     {
-        JFrame jfrm = new JFrame("A Simple Swing Application");
+        jfrm = new JFrame("Monster");
         jfrm.setLayout(new GridLayout(6,5));
         jfrm.setSize(500,500);
         jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +58,6 @@ public class Kingdom implements ActionListener {
         Down.addActionListener(this);
         Right.addActionListener(this);
         TryAgain.addActionListener(this);
-
         jfrm.add(Left);
         jfrm.add(Up);
         jfrm.add(Down);
@@ -73,7 +72,8 @@ public class Kingdom implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable(){   //Вызов окна приложения
                 public void run() {
-            new Kingdom();
+            new Kingdom_Monster_Level();
+
         }});
 
 
@@ -90,15 +90,25 @@ public class Kingdom implements ActionListener {
 
         TimerTaskDoLogicOfMonsterWithTimer:             // метка логика монстра таймер
         {
+            int Xexit=3,Yexit=4;
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
+                    if(jlab[Xexit][Yexit].getText()=="H")
+                    {
+
+                    }
+                    else
+                    jlab[Xexit][Yexit].setText("Exit");
                     if(isPause)
                     {
+                        Eraser();
                         BlockButtons();
                         TryAgain.setVisible(true);
+
                     }
-                    if (isPause == false) {
+
+                    if (isPause == false && isNewLevel==false) {
                         TryAgain.setVisible(false);
                         jlab[Xmonster][Ymonster].setText("X");
                         jlab[Xmonster][Ymonster].setForeground(Color.BLACK);
@@ -117,7 +127,17 @@ public class Kingdom implements ActionListener {
 
                         if (X == 0 && Y == 0) {
                             Eraser();
+                            System.out.println("Catched");
+                            h1.kill(h1);
                             isPause=true;
+
+                        }
+
+
+
+                        if(Xid==Xexit && Yid==Yexit) //Персонаж нашел выход
+                        {
+
 
                         }
 
@@ -129,7 +149,7 @@ public class Kingdom implements ActionListener {
             };
 
             Timer timer=new Timer();
-            timer.schedule(timerTask,1000,550);
+            timer.schedule(timerTask,1000,400);
         }
 
 
@@ -144,6 +164,10 @@ public class Kingdom implements ActionListener {
 
 
     }
+
+
+
+
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) { // УПРАВЛЕНИЕ ПЕРСОНАЖЕМ
@@ -179,6 +203,7 @@ public class Kingdom implements ActionListener {
                         }
         }
         else {
+                //Eraser();
                 UnBlockButtons();
                 isPause=false;
         }
@@ -191,10 +216,13 @@ public class Kingdom implements ActionListener {
                 for(int j=0;j<5;j++)
                 {
                     jlab[i][j].setText("X");
+                    jlab[i][j].setForeground(Color.BLACK);
                 }
             }
         jlab[0][0].setText("H");
+        jlab[0][0].setForeground(Color.BLUE);
         jlab[Xdef][Ydef].setText("M");
+            jlab[Xdef][Ydef].setForeground(Color.RED);
         Xmonster=Xdef;
         Ymonster=Ydef;
         }
